@@ -1,0 +1,5 @@
+.btn .btn-secondari .disabled {
+  @:hover {
+    cursor: not-allowed;
+  }
+}
