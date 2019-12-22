@@ -1,4 +1,5 @@
 import firebase, { database } from '../../firebase';
+import swal from 'sweetalert';
 
 export const actionUserName = () => (dispatch) => {
    setTimeout(() => {
@@ -68,6 +69,12 @@ export const addDataToAPI = (data) => (dispatch) => {
       content: data.content,
       date: data.date
    });
+   swal({
+      title: "Good job!",
+      text: " Data successfully added ",
+      icon: "success",
+      button: "Aww yess",
+   });
 }
 
 export const getDataFromAPI = (data) => (dispatch) => {
@@ -94,7 +101,7 @@ export const getDataFromAPI = (data) => (dispatch) => {
 
 export const updateDataAPI = (data) => (dispatch) => {
    return new Promise((resolve, reject) => {
-      const ulrNots = database.ref(`notes/${data.userId}/${data.noteId}`);
+      const ulrNots = database.ref(`react/${data.userId}/${data.noteId}`);
       ulrNots.set({
          title: data.title,
          content: data.content,
@@ -105,8 +112,36 @@ export const updateDataAPI = (data) => (dispatch) => {
             reject(false)
          } else {
             resolve(true)
-            console.log('success', data)
+            swal({
+               title: "Good job!",
+               text: " Data update successful ",
+               icon: "success",
+               button: "Aww yess",
+            });
          }
       });
    })
+}
+
+
+export const deleteDataAPI = (data) => (dispatch) => {
+   swal({
+      title: "Are you sure?",
+      text: `do you want to delete the ${data.title} from the list`,
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+   })
+      .then((willDelete) => {
+         if (willDelete) {
+            const ulrNots = database.ref(`react/${data.userId}/${data.noteId}`);
+            ulrNots.remove();
+            console.log(data);
+            swal("Poof! Your imaginary file has been deleted!", {
+               icon: "success",
+            });
+         } else {
+            swal("Your imaginary file is safe!");
+         }
+      });
 }
